@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AB&N WEARS | Luxury Big Boys Tailoring</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:#000;
+  color:white;
+}
+
+header{
+  position:absolute;
+  width:100%;
+  padding:20px 50px;
+  display:flex;
+  justify-content:space-between;
+  z-index:10;
+}
+
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:30px;
+  color:gold;
+}
+
+.hero{
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero video{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.hero-content{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+}
+
+.hero h1{
+  font-size:50px;
+  color:gold;
+}
+
+.gallery{
+  padding:80px 40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:30px;
+  background:#111;
+}
+
+.card{
+  background:#000;
+  border:1px solid gold;
+  border-radius:10px;
+  overflow:hidden;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:scale(1.05);
+}
+
+.card img{
+  width:100%;
+  height:450px;
+  object-fit:cover;
+}
+
+.card-content{
+  padding:20px;
+  text-align:center;
+}
+
+.price{
+  color:gold;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+button{
+  background:gold;
+  border:none;
+  padding:10px 20px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.reviews{
+  background:black;
+  padding:60px;
+  text-align:center;
+}
+
+.review-slide{
+  display:none;
+  font-style:italic;
+  font-size:18px;
+}
+
+.whatsapp-chat{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  padding:15px 20px;
+  border-radius:50px;
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-content{
+  background:#111;
+  padding:30px;
+  border:1px solid gold;
+  width:300px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">AB&N WEARS</div>
+</header>
+
+<section class="hero">
+<video autoplay muted loop>
+<source src="https://cdn.coverr.co/videos/coverr-man-adjusting-his-suit-1575/1080p.mp4">
+</video>
+<div class="hero-content">
+<h1>Luxury Big Boys Senator Collection</h1>
+<p>Premium Tailoring For Kings</p>
+</div>
+</section>
+
+<section class="gallery" id="gallery"></section>
+
+<section class="reviews">
+<h2 style="color:gold;">What Our Clients Say</h2>
+<div class="review-slide">"Best tailoring experience in Nigeria!" – CEO Lagos</div>
+<div class="review-slide">"Quality is top tier. Worth every naira." – Business Mogul</div>
+<div class="review-slide">"I felt like royalty." – Fashion Influencer</div>
+</section>
+
+<!-- Measurement Modal -->
+<div class="modal" id="orderModal">
+<div class="modal-content">
+<h3>Enter Measurements</h3>
+<input type="text" id="name" placeholder="Full Name"><br><br>
+<input type="text" id="chest" placeholder="Chest"><br><br>
+<input type="text" id="waist" placeholder="Waist"><br><br>
+<button onclick="payNow()">Proceed To Payment</button>
+</div>
+</div>
+
+<a href="https://wa.me/2348012345678" class="whatsapp-chat" target="_blank">
+💬 Live Chat
+</a>
+
+<script>
+let selectedProduct = "";
+let selectedPrice = 0;
+
+const products = [
+{ name:"Royal Navy Senator", price:120000, img:"https://images.unsplash.com/photo-1583744946564-b52ac1c389c8" },
+{ name:"Classic White Senator", price:110000, img:"https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf" },
+{ name:"Luxury Gold Kaftan", price:150000, img:"https://images.unsplash.com/photo-1612423284934-2850a2f7a87d" },
+{ name:"Black Executive Agbada", price:180000, img:"https://images.unsplash.com/photo-1612423284701-b8b1d20c5c02" },
+{ name:"Emerald Prestige Senator", price:135000, img:"https://images.unsplash.com/photo-1622295022486-56f7cc8ef3f7" },
+{ name:"Royal Burgundy Kaftan", price:145000, img:"https://images.unsplash.com/photo-1588117260148-b47818741c74" }
+];
+
+const gallery = document.getElementById("gallery");
+
+products.forEach(p=>{
+gallery.innerHTML += `
+<div class="card">
+<img src="${p.img}">
+<div class="card-content">
+<h3>${p.name}</h3>
+<div class="price">₦${p.price.toLocaleString()}</div>
+<button onclick="openModal('${p.name}',${p.price})">Order Now</button>
+</div>
+</div>`;
+});
+
+function openModal(name, price){
+selectedProduct = name;
+selectedPrice = price;
+document.getElementById("orderModal").style.display="flex";
+}
+
+function payNow(){
+let handler = PaystackPop.setup({
+key: "pk_test_3a2f974432cf0e127f1f6d1e820c05cf91845fb0",
+email: "customer@email.com",
+amount: selectedPrice * 100,
+currency: "NGN",
+callback: function(response){
+
+let name = document.getElementById("name").value;
+let chest = document.getElementById("chest").value;
+let waist = document.getElementById("waist").value;
+
+let message = `Hello AB&N WEARS,
+Order: ${selectedProduct}
+Amount Paid: ₦${selectedPrice}
+Name: ${name}
+Chest: ${chest}
+Waist: ${waist}`;
+
+window.location.href =
+`https://wa.me/2349152004538?text=${encodeURIComponent(message)}`;
+
+}
+});
+handler.openIframe();
+}
+
+/* Review Slider */
+let slides=document.querySelectorAll(".review-slide");
+let index=0;
+function showSlide(){
+slides.forEach(s=>s.style.display="none");
+slides[index].style.display="block";
+index=(index+1)%slides.length;
+}
+setInterval(showSlide,3000);
+showSlide();
+</script>
+
+</body>
+</html>
