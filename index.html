@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Cart Icon -->
+<div id="cartIcon" style="position:fixed;top:25px;right:40px;cursor:pointer;font-size:20px;color:gold;z-index:20;">
+🛒 Cart (<span id="cartCount">0</span>)
+</div>
+
+<!-- Cart Sidebar -->
+<div id="cartSidebar" style="
+position:fixed;
+right:-400px;
+top:0;
+width:350px;
+height:100%;
+background:#111;
+padding:20px;
+transition:0.4s;
+overflow:auto;
+z-index:30;
+border-left:2px solid gold;
+">
+
+<h2 style="color:gold;">Your Cart</h2>
+<div id="cartItems"></div>
+<h3>Total: ₦<span id="cartTotal">0</span></h3>
+<button onclick="openCheckout()">Proceed To Checkout</button>
+<br><br>
+<button onclick="closeCart()">Close</button>
+</div>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AB&N WEARS | Luxury Big Boys Tailoring</title>
@@ -173,7 +200,7 @@ button{
 <div class="review-slide">"I felt like royalty." – Fashion Influencer</div>
 </section>
 
-<!-- Measurement Modal -->
+<!-- Measurement Modal
 <div class="modal" id="orderModal">
 <div class="modal-content">
 <h3>Enter Measurements</h3>
@@ -182,13 +209,28 @@ button{
 <input type="text" id="waist" placeholder="Waist"><br><br>
 <button onclick="payNow()">Proceed To Payment</button>
 </div>
+</div> -->
+
+<!-- Measurement Modal -->
+<div class="modal" id="orderModal">
+  <div class="modal-content">
+    <h3>Enter Measurements</h3>
+
+    <input type="text" id="name" placeholder="Full Name"><br><br>
+    <input type="text" id="chest" placeholder="Chest"><br><br>
+    <input type="text" id="waist" placeholder="Waist"><br><br>
+
+    <button onclick="payNow()">Proceed To Payment</button>
+    <br><br>
+    <button onclick="goBack()" style="background:#444;color:white;">⬅ Back To Cart</button>
+  </div>
 </div>
 
 <a href="https://wa.me/2349152004538" class="whatsapp-chat" target="_blank">
 💬 Live Chat
 </a>
 
-<script>
+<!-- <script>
 let selectedProduct = "";
 let selectedPrice = 0;
 
@@ -258,6 +300,169 @@ index=(index+1)%slides.length;
 }
 setInterval(showSlide,3000);
 showSlide();
+</script> -->
+<script>
+let cart = [];
+let selectedPrice = 0;
+
+/* PRODUCTS */
+const products = [
+{ name:"Royal Navy Senator", price:120000, img:"https://images.unsplash.com/photo-1583744946564-b52ac1c389c8" },
+{ name:"Classic White Senator", price:110000, img:"https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf" },
+{ name:"Luxury Gold Kaftan", price:150000, img:"https://images.unsplash.com/photo-1612423284934-2850a2f7a87d" },
+{ name:"Black Executive Agbada", price:180000, img:"https://images.unsplash.com/photo-1612423284701-b8b1d20c5c02" },
+{ name:"Emerald Prestige Senator", price:135000, img:"https://images.unsplash.com/photo-1622295022486-56f7cc8ef3f7" },
+{ name:"Royal Burgundy Kaftan", price:145000, img:"https://images.unsplash.com/photo-1588117260148-b47818741c74" }
+];
+
+/* DISPLAY PRODUCTS */
+const gallery = document.getElementById("gallery");
+
+products.forEach((p,index)=>{
+gallery.innerHTML += `
+<div class="card">
+<img src="${p.img}">
+<div class="card-content">
+<h3>${p.name}</h3>
+<div class="price">₦${p.price.toLocaleString()}</div>
+<button onclick="addToCart(${index})">Add To Cart</button>
+</div>
+</div>`;
+});
+
+/* ADD TO CART */
+function addToCart(index){
+let product = products[index];
+
+let existing = cart.find(item=>item.name===product.name);
+if(existing){
+existing.qty += 1;
+}else{
+cart.push({...product, qty:1});
+}
+
+updateCart();
+openCart();
+}
+
+/* UPDATE CART */
+function updateCart(){
+let cartItems = document.getElementById("cartItems");
+let cartTotal = document.getElementById("cartTotal");
+let cartCount = document.getElementById("cartCount");
+
+cartItems.innerHTML = "";
+let total = 0;
+let count = 0;
+
+cart.forEach((item,i)=>{
+total += item.price * item.qty;
+count += item.qty;
+
+cartItems.innerHTML += `
+<div style="border-bottom:1px solid gold;padding:10px 0;">
+<strong>${item.name}</strong><br>
+₦${item.price.toLocaleString()} x ${item.qty}<br>
+<button onclick="changeQty(${i},-1)">-</button>
+<button onclick="changeQty(${i},1)">+</button>
+<button onclick="removeItem(${i})">Remove</button>
+</div>`;
+});
+
+cartTotal.innerText = total.toLocaleString();
+cartCount.innerText = count;
+}
+
+/* CHANGE QTY */
+function changeQty(index,change){
+cart[index].qty += change;
+if(cart[index].qty <= 0) cart.splice(index,1);
+updateCart();
+}
+
+/* REMOVE ITEM */
+function removeItem(index){
+cart.splice(index,1);
+updateCart();
+}
+
+/* CART OPEN/CLOSE */
+document.getElementById("cartIcon").onclick = openCart;
+
+function openCart(){
+document.getElementById("cartSidebar").style.right="0";
+}
+
+function closeCart(){
+document.getElementById("cartSidebar").style.right="-400px";
+}
+
+/* CHECKOUT */
+function openCheckout(){
+if(cart.length===0){
+alert("Cart is empty!");
+return;
+}
+document.getElementById("orderModal").style.display="flex";
+}
+
+/* PAYSTACK CHECKOUT */
+function payNow(){
+
+let name = document.getElementById("name").value;
+let chest = document.getElementById("chest").value;
+let waist = document.getElementById("waist").value;
+
+let total = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
+
+let handler = PaystackPop.setup({
+key: "pk_live_e8b893fa426ea57e8090d77b75bc4430cd88c4b9",
+email: "customer@email.com",
+amount: total * 100,
+currency: "NGN",
+callback: function(response){
+
+let orderSummary = cart.map(item=>
+`${item.name} x${item.qty}`
+).join(", ");
+
+let message = `Hello AB&N WEARS,
+Order Summary: ${orderSummary}
+Total Paid: ₦${total.toLocaleString()}
+Name: ${name}
+Chest: ${chest}
+Waist: ${waist}`;
+
+window.location.href =
+`https://wa.me/2349152004538?text=${encodeURIComponent(message)}`;
+
+cart = [];
+updateCart();
+closeCart();
+}
+});
+
+handler.openIframe();
+}
+
+/* REVIEW SLIDER */
+let slides=document.querySelectorAll(".review-slide");
+let index=0;
+function showSlide(){
+slides.forEach(s=>s.style.display="none");
+slides[index].style.display="block";
+index=(index+1)%slides.length;
+}
+setInterval(showSlide,3000);
+showSlide();
+function goBack(){
+  document.getElementById("orderModal").style.opacity="0";
+setTimeout(()=>{
+  document.getElementById("orderModal").style.display="none";
+  document.getElementById("orderModal").style.opacity="1";
+},300);
+  openCart(); // reopen cart sidebar
+}
 </script>
 
 </body>
