@@ -212,13 +212,36 @@ button{
 </div> -->
 
 <!-- Measurement Modal -->
-<div class="modal" id="orderModal">
+<!-- <div class="modal" id="orderModal">
   <div class="modal-content">
     <h3>Enter Measurements</h3>
 
     <input type="text" id="name" placeholder="Full Name"><br><br>
     <input type="text" id="chest" placeholder="Chest"><br><br>
     <input type="text" id="waist" placeholder="Waist"><br><br>
+
+    <button onclick="payNow()">Proceed To Payment</button>
+    <br><br>
+    <button onclick="goBack()" style="background:#444;color:white;">⬅ Back To Cart</button>
+  </div>
+</div> -->
+
+<!-- Measurement Modal -->
+<div class="modal" id="orderModal">
+  <div class="modal-content">
+    <h3>Enter Measurements & Delivery Details</h3>
+
+    <input type="text" id="name" placeholder="Full Name"><br><br>
+    <input type="text" id="phone" placeholder="Phone Number"><br><br>
+
+    <input type="text" id="chest" placeholder="Chest"><br><br>
+    <input type="text" id="waist" placeholder="Waist"><br><br>
+
+    <hr style="border:1px solid gold; margin:15px 0;">
+
+    <input type="text" id="address" placeholder="Delivery Address"><br><br>
+    <input type="text" id="city" placeholder="City"><br><br>
+    <input type="text" id="state" placeholder="State"><br><br>
 
     <button onclick="payNow()">Proceed To Payment</button>
     <br><br>
@@ -407,11 +430,58 @@ document.getElementById("orderModal").style.display="flex";
 }
 
 /* PAYSTACK CHECKOUT */
+// function payNow(){
+
+// let name = document.getElementById("name").value;
+// let chest = document.getElementById("chest").value;
+// let waist = document.getElementById("waist").value;
+
+// let total = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
+
+// let handler = PaystackPop.setup({
+// key: "pk_live_e8b893fa426ea57e8090d77b75bc4430cd88c4b9",
+// email: "customer@email.com",
+// amount: total * 100,
+// currency: "NGN",
+// callback: function(response){
+
+// let orderSummary = cart.map(item=>
+// `${item.name} x${item.qty}`
+// ).join(", ");
+
+// let message = `Hello AB&N WEARS,
+// Order Summary: ${orderSummary}
+// Total Paid: ₦${total.toLocaleString()}
+// Name: ${name}
+// Chest: ${chest}
+// Waist: ${waist}`;
+
+// window.location.href =
+// `https://wa.me/2349152004538?text=${encodeURIComponent(message)}`;
+
+// cart = [];
+// updateCart();
+// closeCart();
+// }
+// });
+
+// handler.openIframe();
+// }
+
 function payNow(){
 
 let name = document.getElementById("name").value;
+let phone = document.getElementById("phone").value;
 let chest = document.getElementById("chest").value;
 let waist = document.getElementById("waist").value;
+let address = document.getElementById("address").value;
+let city = document.getElementById("city").value;
+let state = document.getElementById("state").value;
+
+if(!name || !phone || !address || !city || !state){
+  alert("Please complete all required fields.");
+  return;
+}
 
 let total = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
 
@@ -427,11 +497,24 @@ let orderSummary = cart.map(item=>
 ).join(", ");
 
 let message = `Hello AB&N WEARS,
-Order Summary: ${orderSummary}
-Total Paid: ₦${total.toLocaleString()}
+
+ORDER SUMMARY:
+${orderSummary}
+
+TOTAL PAID: ₦${total.toLocaleString()}
+
+CUSTOMER DETAILS:
 Name: ${name}
+Phone: ${phone}
+
+MEASUREMENTS:
 Chest: ${chest}
-Waist: ${waist}`;
+Waist: ${waist}
+
+DELIVERY ADDRESS:
+${address},
+${city},
+${state}`;
 
 window.location.href =
 `https://wa.me/2349152004538?text=${encodeURIComponent(message)}`;
@@ -439,6 +522,7 @@ window.location.href =
 cart = [];
 updateCart();
 closeCart();
+document.getElementById("orderModal").style.display="none";
 }
 });
 
