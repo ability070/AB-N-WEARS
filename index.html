@@ -11,7 +11,8 @@
 position:fixed;
 right:-400px;
 top:0;
-width:350px;
+width:90%;
+max-width:350px;
 height:100%;
 background:#111;
 padding:20px;
@@ -172,10 +173,46 @@ button{
   border:1px solid gold;
   width:300px;
 }
+.modal-content a:hover{
+  text-decoration:underline;
+}
+/* ===== SITE WIDTH CONTROL ===== */
+.site-container{
+  max-width: 480px;
+  margin: 0 auto;
+  background: #000;
+  min-height: 100vh;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+
+/* Make hero text smaller on phones */
+@media (max-width: 480px){
+  .hero h1{
+    font-size:28px;
+  }
+
+  .hero p{
+    font-size:14px;
+  }
+
+  .modal-content{
+    width:90%;
+  }
+
+  .gallery{
+    padding:40px 15px;
+  }
+
+  header{
+    padding:15px 20px;
+  }
+}
+
 </style>
 </head>
 
 <body>
+<div class="site-container">
 
 <header>
 <div class="logo">AB&N WEARS</div>
@@ -226,7 +263,7 @@ button{
   </div>
 </div> -->
 
-<!-- Measurement Modal -->
+<!-- Measurement Modal
 <div class="modal" id="orderModal">
   <div class="modal-content">
     <h3>Enter Measurements & Delivery Details</h3>
@@ -243,6 +280,43 @@ button{
     <input type="text" id="city" placeholder="City"><br><br>
     <input type="text" id="state" placeholder="State"><br><br>
 
+    <button onclick="payNow()">Proceed To Payment</button>
+    <br><br>
+    <button onclick="goBack()" style="background:#444;color:white;">⬅ Back To Cart</button>
+  </div>
+</div> -->
+
+<!-- Measurement Modal -->
+<div class="modal" id="orderModal">
+  <div class="modal-content">
+    <h3>Enter Measurements & Delivery Details</h3>
+
+    <input type="text" id="name" placeholder="Full Name"><br><br>
+    <input type="text" id="phone" placeholder="Phone Number"><br><br>
+
+    <!-- <input type="text" id="chest" placeholder="Chest"><br><br> -->
+    <!-- <input type="text" id="waist" placeholder="Waist"><br><br> -->
+
+    <hr style="border:1px solid gold; margin:15px 0;">
+
+    <input type="text" id="address" placeholder="Delivery Address"><br><br>
+    <input type="text" id="city" placeholder="City"><br><br>
+    <input type="text" id="state" placeholder="State"><br><br>
+
+    <!-- Customer Care Note -->
+    <div style="margin-top:15px; font-size:13px; color:#ccc; line-height:1.5;">
+      ⚠️ <span style="color:gold;">Important:</span><br>
+      After completing your order, please send your 
+      <strong>full measurements (Shoulder, Sleeve, Length, Trouser Length, etc.)</strong> 
+      to our customer care for perfect fitting.
+      <br><br>
+      <a href="https://wa.me/2349152004538" target="_blank" 
+         style="color:#25D366; font-weight:bold; text-decoration:none;">
+         💬 Message Customer Care
+      </a>
+    </div>
+
+    <br>
     <button onclick="payNow()">Proceed To Payment</button>
     <br><br>
     <button onclick="goBack()" style="background:#444;color:white;">⬅ Back To Cart</button>
@@ -330,7 +404,7 @@ let selectedPrice = 0;
 
 /* PRODUCTS */
 const products = [
-{ name:"Royal Navy Senator", price:120000, img:"https://images.unsplash.com/photo-1583744946564-b52ac1c389c8" },
+{ name:"Royal Navy Senator", price:50, img:"https://images.unsplash.com/photo-1583744946564-b52ac1c389c8" },
 { name:"Classic White Senator", price:110000, img:"https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf" },
 { name:"Luxury Gold Kaftan", price:150000, img:"https://images.unsplash.com/photo-1612423284934-2850a2f7a87d" },
 { name:"Black Executive Agbada", price:180000, img:"https://images.unsplash.com/photo-1612423284701-b8b1d20c5c02" },
@@ -548,6 +622,6 @@ setTimeout(()=>{
   openCart(); // reopen cart sidebar
 }
 </script>
-
+</div>
 </body>
 </html>
