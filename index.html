@@ -310,10 +310,10 @@ button{
       <strong>full measurements (Shoulder, Sleeve, Length, Trouser Length, etc.)</strong> 
       to our customer care for perfect fitting.
       <br><br>
-      <a href="https://wa.me/2349152004538" target="_blank" 
+      <!-- <a href="https://wa.me/2349152004538" target="_blank" 
          style="color:#25D366; font-weight:bold; text-decoration:none;">
          💬 Message Customer Care
-      </a>
+      </a> -->
     </div>
 
     <br>
@@ -590,8 +590,14 @@ ${address},
 ${city},
 ${state}`;
 
-window.location.href =
-`https://wa.me/2349152004538?text=${encodeURIComponent(message)}`;
+// window.location.href =
+// `https://wa.me/2349152004538?text=${encodeURIComponent(message)}`;
+
+// Save order message in localStorage (optional)
+localStorage.setItem("orderMessage", message);
+
+// Redirect to Thank You page
+window.location.href = "thankyou.html";
 
 cart = [];
 updateCart();
