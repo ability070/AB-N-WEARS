@@ -294,9 +294,7 @@ button{
     <input type="text" id="name" placeholder="Full Name"><br><br>
     <input type="text" id="phone" placeholder="Phone Number"><br><br>
 
-    <!-- <input type="text" id="chest" placeholder="Chest"><br><br> -->
-    <!-- <input type="text" id="waist" placeholder="Waist"><br><br> -->
-
+   
     <hr style="border:1px solid gold; margin:15px 0;">
 
     <input type="text" id="address" placeholder="Delivery Address"><br><br>
@@ -546,8 +544,6 @@ function payNow(){
 
 let name = document.getElementById("name").value;
 let phone = document.getElementById("phone").value;
-// let chest = document.getElementById("chest").value;
-// let waist = document.getElementById("waist").value;
 let address = document.getElementById("address").value;
 let city = document.getElementById("city").value;
 let state = document.getElementById("state").value;
@@ -566,43 +562,13 @@ amount: total * 100,
 currency: "NGN",
 callback: function(response){
 
-let orderSummary = cart.map(item=>
-`${item.name} x${item.qty}`
-).join(", ");
-
-let message = `Hello AB&N WEARS,
-
-ORDER SUMMARY:
-${orderSummary}
-
-TOTAL PAID: ₦${total.toLocaleString()}
-
-CUSTOMER DETAILS:
-Name: ${name}
-Phone: ${phone}
-
-MEASUREMENTS:
-Chest: ${chest}
-Waist: ${waist}
-
-DELIVERY ADDRESS:
-${address},
-${city},
-${state}`;
-
-// window.location.href =
-// `https://wa.me/2349152004538?text=${encodeURIComponent(message)}`;
-
-// Save order message in localStorage (optional)
-localStorage.setItem("orderMessage", message);
-
-// Redirect to Thank You page
 window.location.href = "thankyou.html";
 
 cart = [];
 updateCart();
 closeCart();
 document.getElementById("orderModal").style.display="none";
+
 }
 });
 
