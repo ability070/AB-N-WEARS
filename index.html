@@ -208,6 +208,40 @@ button{
   }
 }
 
+.modal{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+.modal{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
 </style>
 </head>
 
@@ -402,9 +436,9 @@ let selectedPrice = 0;
 
 /* PRODUCTS */
 const products = [
-{ name:"Royal Navy Senator", price:5, img:"https://images.unsplash.com/photo-1583744946564-b52ac1c389c8" },
-{ name:"Classic White Senator", price:110000, img:"https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf" },
-{ name:"Luxury Gold Kaftan", price:150000, img:"https://images.unsplash.com/photo-1612423284934-2850a2f7a87d" },
+{ name:"Royal Navy Senator", price:5, img:"image.img/senator 1.jpeg" },
+{ name:"Classic White Senator", price:110000, img:"image.img/senator2.jpeg" },
+{ name:"Luxury Gold Kaftan", price:150000, img:"image.img/senator3.jpeg" },
 { name:"Black Executive Agbada", price:180000, img:"https://images.unsplash.com/photo-1612423284701-b8b1d20c5c02" },
 { name:"Emerald Prestige Senator", price:135000, img:"https://images.unsplash.com/photo-1622295022486-56f7cc8ef3f7" },
 { name:"Royal Burgundy Kaftan", price:145000, img:"https://images.unsplash.com/photo-1588117260148-b47818741c74" }
@@ -492,13 +526,22 @@ function closeCart(){
 document.getElementById("cartSidebar").style.right="-400px";
 }
 
-/* CHECKOUT */
 function openCheckout(){
-if(cart.length===0){
-alert("Cart is empty!");
-return;
+
+if(cart.length === 0){
+  alert("Cart is empty!");
+  return;
 }
-document.getElementById("orderModal").style.display="flex";
+
+/* Close Cart Sidebar */
+closeCart();
+
+/* Open Measurement & Delivery Modal */
+document.getElementById("orderModal").style.display = "flex";
+
+/* Optional: Smooth scroll to top */
+window.scrollTo({ top: 0, behavior: "smooth" });
+
 }
 
 /* PAYSTACK CHECKOUT */
