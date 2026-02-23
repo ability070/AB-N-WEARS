@@ -329,6 +329,8 @@ button{
     <br><br>
     <span style="font-size:14px;color:#ccc;">Don't have an account? 
       <a href="#" style="color:gold;" onclick="showCreateAccount()">Create Account</a>
+      <br>
+<button onclick="exitLogin()" style="background:#444;color:white;">⬅ Back / Exit</button>
     </span>
   </div>
 </div>
@@ -613,14 +615,21 @@ window.scrollTo({ top: 0, behavior: "smooth" });
 let customerLoggedIn = false; // Track if customer is logged in
 let currentCustomer = {};      // Store customer info
 
-function openCheckout(){
-    if(cart.length === 0){ alert("Cart is empty!"); return; }
+function openCheckout() {
+    if(cart.length === 0){ 
+        alert("Cart is empty!"); 
+        return; 
+    }
 
+    // Close the cart sidebar
+    closeCart();
+
+    // If customer is not logged in, show login modal
     if(!customerLoggedIn){
         document.getElementById("loginModal").style.display = "flex";
+        window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-        // Open measurement & delivery modal
-        closeCart();
+        // If logged in, open measurements & delivery modal
         document.getElementById("orderModal").style.display = "flex";
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -741,6 +750,14 @@ setTimeout(()=>{
   document.getElementById("orderModal").style.opacity="1";
 },300);
   openCart(); // reopen cart sidebar
+}
+
+function exitLogin() {
+    // Close the login modal
+    document.getElementById("loginModal").style.display = "none";
+
+    // Optional: reopen cart sidebar when exiting login
+    openCart();
 }
 </script>
 </div>
