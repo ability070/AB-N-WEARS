@@ -319,7 +319,34 @@ button{
     <button onclick="goBack()" style="background:#444;color:white;">⬅ Back To Cart</button>
   </div>
 </div> -->
+<!-- CUSTOMER LOGIN MODAL -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <h3>Customer Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email"><br><br>
+    <input type="password" id="loginPassword" placeholder="Password"><br><br>
+    <button onclick="loginCustomer()">Login</button>
+    <br><br>
+    <span style="font-size:14px;color:#ccc;">Don't have an account? 
+      <a href="#" style="color:gold;" onclick="showCreateAccount()">Create Account</a>
+    </span>
+  </div>
+</div>
 
+<!-- CREATE ACCOUNT MODAL -->
+<div class="modal" id="createAccountModal">
+  <div class="modal-content">
+    <h3>Create Account</h3>
+    <input type="text" id="registerName" placeholder="Full Name"><br><br>
+    <input type="email" id="registerEmail" placeholder="Email"><br><br>
+    <input type="password" id="registerPassword" placeholder="Password"><br><br>
+    <button onclick="createAccount()">Register</button>
+    <br><br>
+    <span style="font-size:14px;color:#ccc;">Already have an account? 
+      <a href="#" style="color:gold;" onclick="showLogin()">Login</a>
+    </span>
+  </div>
+</div>
 <!-- Measurement Modal -->
 <div class="modal" id="orderModal">
   <div class="modal-content">
@@ -533,6 +560,7 @@ if(cart.length === 0){
   return;
 }
 
+
 /* Close Cart Sidebar */
 closeCart();
 
@@ -582,7 +610,72 @@ window.scrollTo({ top: 0, behavior: "smooth" });
 
 // handler.openIframe();
 // }
+let customerLoggedIn = false; // Track if customer is logged in
+let currentCustomer = {};      // Store customer info
 
+function openCheckout(){
+    if(cart.length === 0){ alert("Cart is empty!"); return; }
+
+    if(!customerLoggedIn){
+        document.getElementById("loginModal").style.display = "flex";
+    } else {
+        // Open measurement & delivery modal
+        closeCart();
+        document.getElementById("orderModal").style.display = "flex";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+}
+
+function loginCustomer(){
+    let email = document.getElementById("loginEmail").value;
+    let password = document.getElementById("loginPassword").value;
+
+    if(!email || !password){
+        alert("Please enter email and password");
+        return;
+    }
+
+    // For demo: any email/password logs in
+    customerLoggedIn = true;
+    currentCustomer = { email };
+    document.getElementById("loginModal").style.display = "none";
+
+    // Open measurements after login
+    closeCart();
+    document.getElementById("orderModal").style.display = "flex";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showCreateAccount(){
+    document.getElementById("loginModal").style.display = "none";
+    document.getElementById("createAccountModal").style.display = "flex";
+}
+
+function showLogin(){
+    document.getElementById("createAccountModal").style.display = "none";
+    document.getElementById("loginModal").style.display = "flex";
+}
+
+function createAccount(){
+    let name = document.getElementById("registerName").value;
+    let email = document.getElementById("registerEmail").value;
+    let password = document.getElementById("registerPassword").value;
+
+    if(!name || !email || !password){
+        alert("Please fill all fields");
+        return;
+    }
+
+    // For demo: any registration is accepted
+    customerLoggedIn = true;
+    currentCustomer = { name, email };
+    document.getElementById("createAccountModal").style.display = "none";
+
+    // Open measurements after account creation
+    closeCart();
+    document.getElementById("orderModal").style.display = "flex";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
 function payNow(){
 
 let name = document.getElementById("name").value;
@@ -616,6 +709,19 @@ document.getElementById("orderModal").style.display="none";
 });
 
 handler.openIframe();
+fetch("/api/order", {
+  method:"POST",
+  headers:{"Content-Type":"application/json"},
+  body: JSON.stringify({
+    name,
+    phone,
+    address,
+    city,
+    state,
+    items: cart,
+    total
+  })
+});
 }
 
 /* REVIEW SLIDER */
