@@ -335,7 +335,6 @@ button{
   </div>
 </div>
 
-<!-- CREATE ACCOUNT MODAL -->
 <div class="modal" id="createAccountModal">
   <div class="modal-content">
     <h3>Create Account</h3>
@@ -347,6 +346,8 @@ button{
     <span style="font-size:14px;color:#ccc;">Already have an account? 
       <a href="#" style="color:gold;" onclick="showLogin()">Login</a>
     </span>
+    <br>
+    <button onclick="exitCreateAccount()" style="background:#444;color:white;">⬅ Back / Exit</button>
   </div>
 </div>
 <!-- Measurement Modal -->
@@ -757,6 +758,13 @@ function exitLogin() {
     document.getElementById("loginModal").style.display = "none";
 
     // Optional: reopen cart sidebar when exiting login
+    openCart();
+}
+function exitCreateAccount() {
+    // Close the Create Account modal
+    document.getElementById("createAccountModal").style.display = "none";
+
+    // Optionally: reopen the cart sidebar when exiting
     openCart();
 }
 </script>
