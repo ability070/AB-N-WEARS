@@ -242,6 +242,40 @@ button{
   from{opacity:0;}
   to{opacity:1;}
 }
+
+.slider{
+  position:relative;
+  width:100%;
+  height:450px;
+  overflow:hidden;
+}
+
+.slide{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:0.5s;
+}
+
+.slide.active{
+  opacity:1;
+}
+
+.prev, .next{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,0.5);
+  color:white;
+  border:none;
+  padding:10px;
+  cursor:pointer;
+}
+
+.prev{ left:10px; }
+.next{ right:10px; }
 </style>
 </head>
 
@@ -281,6 +315,7 @@ button{
 <button onclick="payNow()">Proceed To Payment</button>
 </div>
 </div> -->
+
 
 <!-- Measurement Modal -->
 <!-- <div class="modal" id="orderModal">
@@ -466,27 +501,126 @@ let selectedPrice = 0;
 
 /* PRODUCTS */
 const products = [
-{ name:"Royal Navy Senator", price:5, img:"image.img/senator 1.jpeg" },
-{ name:"Classic White Senator", price:110000, img:"image.img/senator2.jpeg" },
-{ name:"Luxury Gold Kaftan", price:150000, img:"image.img/senator3.jpeg" },
-{ name:"Black Executive Agbada", price:180000, img:"https://images.unsplash.com/photo-1612423284701-b8b1d20c5c02" },
-{ name:"Emerald Prestige Senator", price:135000, img:"https://images.unsplash.com/photo-1622295022486-56f7cc8ef3f7" },
-{ name:"Royal Burgundy Kaftan", price:145000, img:"https://images.unsplash.com/photo-1588117260148-b47818741c74" }
+// { name:"Royal Navy Senator",
+//  price:5,
+//   img:"image.img/senator1.jpeg" },
+
+{
+  name:"Royal Navy Senator",
+  price:50000,
+  images:[
+    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
+    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
+    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
+  ]
+},
+  
+// { name:"Classic White Senator", price:110000, img:"image.img/senator2.jpeg" },
+{
+  name:"Royal Navy Senator",
+  price:50000,
+  images:[
+    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
+    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
+    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
+  ]
+},
+// { name:"Luxury Gold Kaftan", price:150000, img:"image.img/senator3.jpeg" },
+{
+  name:"Royal Navy Senator",
+  price:50000,
+  images:[
+    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
+    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
+    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
+  ]
+},
+// { name:"Black Executive Agbada", price:180000, img:"https://images.unsplash.com/photo-1612423284701-b8b1d20c5c02" },
+{
+  name:"Royal Navy Senator",
+  price:50000,
+  images:[
+    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
+    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
+    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
+  ]
+},
+// { name:"Emerald Prestige Senator", price:135000, img:"https://images.unsplash.com/photo-1622295022486-56f7cc8ef3f7" },
+{
+  name:"Royal Navy Senator",
+  price:50000,
+  images:[
+    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
+    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
+    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
+  ]
+},
+// { name:"Royal Burgundy Kaftan", price:145000, img:"https://images.unsplash.com/photo-1588117260148-b47818741c74" }
+{
+  name:"Royal Navy Senator",
+  price:50000,
+  images:[
+    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
+    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
+    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
+  ]
+},
 ];
 
 /* DISPLAY PRODUCTS */
 const gallery = document.getElementById("gallery");
 
+// products.forEach((p,index)=>{
+// gallery.innerHTML += `
+// <div class="card">
+// <img src="${p.img}">
+// <div class="card-content">
+// <h3>${p.name}</h3>
+// <div class="price">₦${p.price.toLocaleString()}</div>
+// <button onclick="addToCart(${index})">Add To Cart</button>
+// </div>
+// </div>`;
+// });
+// 
+
 products.forEach((p,index)=>{
+
+// ALWAYS guarantee 3 images
+let imgs = [];
+
+if(p.images && p.images.length){
+  imgs = [...p.images];
+
+  // fill missing images if less than 3
+  while(imgs.length < 3){
+    imgs.push(imgs[0]);
+  }
+
+}else{
+  imgs = [p.img, p.img, p.img];
+}
+
 gallery.innerHTML += `
 <div class="card">
-<img src="${p.img}">
+
+<div class="slider" id="slider-${index}">
+  <img src="${imgs[0]}" class="slide active">
+  <img src="${imgs[1]}" class="slide">
+  <img src="${imgs[2]}" class="slide">
+
+  <button class="prev" onclick="slide(${index}, -1)">❮</button>
+  <button class="next" onclick="slide(${index}, 1)">❯</button>
+</div>
+
 <div class="card-content">
 <h3>${p.name}</h3>
 <div class="price">₦${p.price.toLocaleString()}</div>
 <button onclick="addToCart(${index})">Add To Cart</button>
 </div>
-</div>`;
+
+</div>
+`;
+
 });
 
 /* ADD TO CART */
@@ -767,6 +901,29 @@ function exitCreateAccount() {
     // Optionally: reopen the cart sidebar when exiting
     openCart();
 }
+
+function slide(index, direction){
+  let slider = document.getElementById(`slider-${index}`);
+  let slides = slider.querySelectorAll(".slide");
+
+  let current = 0;
+
+  slides.forEach((s,i)=>{
+    if(s.classList.contains("active")){
+      current = i;
+      s.classList.remove("active");
+    }
+  });
+
+  let next = (current + direction + slides.length) % slides.length;
+  slides[next].classList.add("active");
+}
+
+setInterval(() => {
+  products.forEach((_, index) => {
+    slide(index, 1);
+  });
+}, 4000); // every 4 seconds
 </script>
 </div>
 </body>
