@@ -107,45 +107,49 @@
 </div>
 
 <script>
-/* ================= ADMIN LOGIN ================= */
+/* ================= LOGIN ================= */
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "1234";
 
 function login(){
-  let u = user.value;
-  let p = pass.value;
-
-  if(u === ADMIN_USER && p === ADMIN_PASS){
+  if(user.value === ADMIN_USER && pass.value === ADMIN_PASS){
     loginBox.classList.add("hidden");
     dashboard.classList.remove("hidden");
     loadProducts();
-    loadOrders();
   } else {
     alert("Wrong login");
   }
 }
 
-/* ================= CLOUD IMAGE UPLOAD ================= */
-async function uploadImage(file){
-  let form = new FormData();
-  form.append("file", file);
-  form.append("upload_preset", "YOUR_UPLOAD_PRESET");
-
-  let res = await fetch(
-    "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload",
-    { method:"POST", body:form }
-  );
-
-  let data = await res.json();
-  return data.secure_url;
-}
+/* ================= CLOUDINARY CONFIG ================= */
+const CLOUD_NAME = "YOUR_CLOUD_NAME";
+const UPLOAD_PRESET = "YOUR_UPLOAD_PRESET";
 
 /* ================= PRODUCTS ================= */
 let products = JSON.parse(localStorage.getItem("products")) || [];
 
-async function addProduct(){
+/* UPLOAD IMAGE TO CLOUDINARY */
+async function uploadImage(file){
+  let formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
 
+  let res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  let data = await res.json();
+  return data.secure_url; // ✅ REAL IMAGE URL
+}
+
+/* ADD PRODUCT */
+async function addProduct(){
   let file = image.files[0];
+
   if(!file){
     alert("Select image");
     return;
@@ -155,13 +159,18 @@ async function addProduct(){
 
   let product = {
     name: name.value,
-    price: price.value,
+    price: Number(price.value),
     desc: desc.value,
     image: imageUrl
   };
 
   products.push(product);
   localStorage.setItem("products", JSON.stringify(products));
+
+  name.value = "";
+  price.value = "";
+  desc.value = "";
+  image.value = "";
 
   loadProducts();
 }
@@ -177,45 +186,18 @@ function loadProducts(){
         <img src="${p.image}">
         <h3>${p.name}</h3>
         <p>₦${p.price}</p>
-        <p>${p.desc}</p>
         <button onclick="deleteProduct(${i})">Delete</button>
       </div>
     `;
   });
 }
 
+/* DELETE */
 function deleteProduct(i){
   products.splice(i,1);
   localStorage.setItem("products", JSON.stringify(products));
   loadProducts();
 }
-
-/* ================= ORDERS ================= */
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-function loadOrders(){
-  let box = document.getElementById("orders");
-  box.innerHTML = "";
-
-  orders.forEach((o,i)=>{
-    box.innerHTML += `
-      <div class="card">
-        <h3>${o.name}</h3>
-        <p>${o.phone}</p>
-        <p>${o.address}</p>
-        <p>Total: ₦${o.total}</p>
-        <button onclick="deleteOrder(${i})">Delete</button>
-      </div>
-    `;
-  });
-}
-
-function deleteOrder(i){
-  orders.splice(i,1);
-  localStorage.setItem("orders", JSON.stringify(orders));
-  loadOrders();
-}
 </script>
-
 </body>
 </html>

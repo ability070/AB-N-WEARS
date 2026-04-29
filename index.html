@@ -1,43 +1,16 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <!-- Cart Icon -->
-<div id="cartIcon" style="position:fixed;top:25px;right:40px;cursor:pointer;font-size:20px;color:gold;z-index:20;">
-🛒 Cart (<span id="cartCount">0</span>)
-</div>
-
-<!-- Cart Sidebar -->
-<div id="cartSidebar" style="
-position:fixed;
-right:-400px;
-top:0;
-width:90%;
-max-width:350px;
-height:100%;
-background:#111;
-padding:20px;
-transition:0.4s;
-overflow:auto;
-z-index:30;
-border-left:2px solid gold;
-">
-
-<h2 style="color:gold;">Your Cart</h2>
-<div id="cartItems"></div>
-<h3>Total: ₦<span id="cartTotal">0</span></h3>
-<button onclick="openCheckout()">Proceed To Checkout</button>
-<br><br>
-<button onclick="closeCart()">Close</button>
-</div>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AB&N WEARS | Luxury Big Boys Tailoring</title>
+
+<title>AB&N WEARS | Premium Fashion</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
 
-<script src="https://js.paystack.co/v1/inline.js"></script>
-
 <style>
+
 body{
   margin:0;
   font-family:'Poppins',sans-serif;
@@ -45,25 +18,59 @@ body{
   color:white;
 }
 
+/* PREMIUM HEADER (GLASS EFFECT) */
 header{
-  position:absolute;
+  position:fixed;
+  top:0;
+  left:0;
   width:100%;
-  padding:20px 50px;
+  padding:15px 20px;
   display:flex;
   justify-content:space-between;
-  z-index:10;
+  align-items:center;
+  z-index:99999;
+
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,215,0,0.2);
 }
 
 .logo{
   font-family:'Playfair Display',serif;
-  font-size:30px;
+  font-size:22px;
   color:gold;
+  letter-spacing:1px;
 }
 
+/* PREMIUM CART BADGE */
+#cartIcon{
+  position:relative;
+  cursor:pointer;
+  font-size:22px;
+  color:gold;
+  background:rgba(0,0,0,0.8);
+  border:1px solid gold;
+  padding:6px 12px;
+  border-radius:30px;
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+
+#count{
+  background:gold;
+  color:black;
+  padding:2px 7px;
+  border-radius:50%;
+  font-size:12px;
+  font-weight:bold;
+}
+
+/* HERO */
 .hero{
   height:100vh;
   position:relative;
-  overflow:hidden;
+  margin-top:70px;
 }
 
 .hero video{
@@ -82,511 +89,193 @@ header{
 }
 
 .hero h1{
-  font-size:50px;
+  font-size:26px;
   color:gold;
 }
 
-.gallery{
-  padding:80px 40px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:30px;
-  background:#111;
+/* PRODUCTS */
+.products{
+  padding:40px 15px;
+  background:#0a0a0a;
 }
 
+.products h2{
+  text-align:center;
+  color:gold;
+  margin-bottom:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:15px;
+}
+
+/* PREMIUM CARD */
 .card{
-  background:#000;
-  border:1px solid gold;
-  border-radius:10px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,215,0,0.3);
+  border-radius:12px;
   overflow:hidden;
+  text-align:center;
   transition:0.3s;
 }
 
 .card:hover{
-  transform:scale(1.05);
+  transform:translateY(-5px);
+  border-color:gold;
 }
 
 .card img{
   width:100%;
-  height:450px;
+  height:170px;
   object-fit:cover;
 }
 
-.card-content{
-  padding:20px;
-  text-align:center;
+.card h4{
+  margin:5px;
 }
 
 .price{
   color:gold;
   font-weight:bold;
-  margin:10px 0;
 }
 
+/* BUTTON */
 button{
   background:gold;
   border:none;
-  padding:10px 20px;
-  font-weight:bold;
+  padding:7px 10px;
+  margin:5px;
   cursor:pointer;
+  font-weight:bold;
+  border-radius:6px;
 }
 
+/* CART DRAWER */
+#cart{
+  position:fixed;
+  top:0;
+  right:-100%;
+  width:85%;
+  height:100%;
+  background:#0f0f0f;
+  padding:20px;
+  transition:0.3s ease;
+  overflow:auto;
+  z-index:999999;
+  border-left:1px solid gold;
+}
+
+#cart h2{
+  color:gold;
+}
+
+/* REVIEWS */
 .reviews{
-  background:black;
-  padding:60px;
+  padding:60px 20px;
   text-align:center;
 }
 
 .review-slide{
   display:none;
   font-style:italic;
-  font-size:18px;
+  max-width:300px;
+  margin:auto;
 }
 
-.whatsapp-chat{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#25D366;
-  padding:15px 20px;
-  border-radius:50px;
-  color:white;
-  text-decoration:none;
-  font-weight:bold;
+.review-slide.active{
+  display:block;
 }
 
-.modal{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.8);
-  justify-content:center;
-  align-items:center;
+.hero-content h1{
+  font-size:28px;
+  color:gold;
+  font-family:'Playfair Display',serif;
+  margin-bottom:10px;
 }
 
-.modal-content{
-  background:#111;
-  padding:30px;
-  border:1px solid gold;
-  width:300px;
-}
-.modal-content a:hover{
-  text-decoration:underline;
-}
-/* ===== SITE WIDTH CONTROL ===== */
-.site-container{
-  max-width: 480px;
-  margin: 0 auto;
-  background: #000;
-  min-height: 100vh;
-  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+.hero-content p{
+  font-size:14px;
+  color:#ddd;
+  letter-spacing:1px;
 }
 
-/* Make hero text smaller on phones */
-@media (max-width: 480px){
-  .hero h1{
-    font-size:28px;
-  }
-
-  .hero p{
-    font-size:14px;
-  }
-
-  .modal-content{
-    width:90%;
-  }
-
-  .gallery{
-    padding:40px 15px;
-  }
-
-  header{
-    padding:15px 20px;
-  }
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.8);
-  justify-content:center;
-  align-items:center;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;}
-  to{opacity:1;}
-}
-.modal{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.8);
-  justify-content:center;
-  align-items:center;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;}
-  to{opacity:1;}
-}
-
-.slider{
-  position:relative;
-  width:100%;
-  height:450px;
-  overflow:hidden;
-}
-
-.slide{
-  position:absolute;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  opacity:0;
-  transition:0.5s;
-}
-
-.slide.active{
-  opacity:1;
-}
-
-.prev, .next{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  background:rgba(0,0,0,0.5);
-  color:white;
-  border:none;
-  padding:10px;
-  cursor:pointer;
-}
-
-.prev{ left:10px; }
-.next{ right:10px; }
 </style>
+
 </head>
 
 <body>
-<div class="site-container">
 
 <header>
-<div class="logo">AB&N WEARS</div>
+  <div class="logo">AB&N WEARS</div>
+
+  <div id="cartIcon">
+    🛒 <span id="count">0</span>
+  </div>
 </header>
 
+<!-- HERO -->
+
 <section class="hero">
-<video autoplay muted loop>
-<source src="https://cdn.coverr.co/videos/coverr-man-adjusting-his-suit-1575/1080p.mp4">
-</video>
-<div class="hero-content">
-<h1>Luxury Big Boys Senator Collection</h1>
-<p>Premium Tailoring For Kings</p>
-</div>
+  <div class="hero-content">
+    <h1>LUXURY BIG BOYS SENATOR COLLECTION</h1>
+    <p>Premium Tailoring for Kings.</p>
+  </div>
 </section>
 
-<section class="gallery" id="gallery"></section>
+<!-- PRODUCTS -->
+
+<section class="products">
+  <h2>Our Collection</h2>
+  <div id="productList" class="grid"></div>
+</section>
+
+<!-- REVIEWS -->
 
 <section class="reviews">
-<h2 style="color:gold;">What Our Clients Say</h2>
-<div class="review-slide">"Best tailoring experience in Nigeria!" – CEO Lagos</div>
-<div class="review-slide">"Quality is top tier. Worth every naira." – Business Mogul</div>
-<div class="review-slide">"I felt like royalty." – Fashion Influencer</div>
+  <h2>What Clients Say</h2>
+
+  <div class="review-slide active">"Best tailoring in Nigeria!"</div>
+  <div class="review-slide">"Luxury at its peak."</div>
+  <div class="review-slide">"Perfect fit always."</div>
 </section>
 
-<!-- Measurement Modal
-<div class="modal" id="orderModal">
-<div class="modal-content">
-<h3>Enter Measurements</h3>
-<input type="text" id="name" placeholder="Full Name"><br><br>
-<input type="text" id="chest" placeholder="Chest"><br><br>
-<input type="text" id="waist" placeholder="Waist"><br><br>
-<button onclick="payNow()">Proceed To Payment</button>
-</div>
-</div> -->
+<!-- CART -->
 
+<div id="cart">
+  <h2>Your Cart</h2>
+  <div id="cartItems"></div>
 
-<!-- Measurement Modal -->
-<!-- <div class="modal" id="orderModal">
-  <div class="modal-content">
-    <h3>Enter Measurements</h3>
+  <h3>Total: ₦<span id="total">0</span></h3>
 
-    <input type="text" id="name" placeholder="Full Name"><br><br>
-    <input type="text" id="chest" placeholder="Chest"><br><br>
-    <input type="text" id="waist" placeholder="Waist"><br><br>
+<button onclick="checkout()">Checkout</button> <button onclick="closeCart()">Close</button>
 
-    <button onclick="payNow()">Proceed To Payment</button>
-    <br><br>
-    <button onclick="goBack()" style="background:#444;color:white;">⬅ Back To Cart</button>
-  </div>
-</div> -->
-
-<!-- Measurement Modal
-<div class="modal" id="orderModal">
-  <div class="modal-content">
-    <h3>Enter Measurements & Delivery Details</h3>
-
-    <input type="text" id="name" placeholder="Full Name"><br><br>
-    <input type="text" id="phone" placeholder="Phone Number"><br><br>
-
-    <input type="text" id="chest" placeholder="Chest"><br><br>
-    <input type="text" id="waist" placeholder="Waist"><br><br>
-
-    <hr style="border:1px solid gold; margin:15px 0;">
-
-    <input type="text" id="address" placeholder="Delivery Address"><br><br>
-    <input type="text" id="city" placeholder="City"><br><br>
-    <input type="text" id="state" placeholder="State"><br><br>
-
-    <button onclick="payNow()">Proceed To Payment</button>
-    <br><br>
-    <button onclick="goBack()" style="background:#444;color:white;">⬅ Back To Cart</button>
-  </div>
-</div> -->
-<!-- CUSTOMER LOGIN MODAL -->
-<div class="modal" id="loginModal">
-  <div class="modal-content">
-    <h3>Customer Login</h3>
-    <input type="email" id="loginEmail" placeholder="Email"><br><br>
-    <input type="password" id="loginPassword" placeholder="Password"><br><br>
-    <button onclick="loginCustomer()">Login</button>
-    <br><br>
-    <span style="font-size:14px;color:#ccc;">Don't have an account? 
-      <a href="#" style="color:gold;" onclick="showCreateAccount()">Create Account</a>
-      <br>
-<button onclick="exitLogin()" style="background:#444;color:white;">⬅ Back / Exit</button>
-    </span>
-  </div>
 </div>
 
-<div class="modal" id="createAccountModal">
-  <div class="modal-content">
-    <h3>Create Account</h3>
-    <input type="text" id="registerName" placeholder="Full Name"><br><br>
-    <input type="email" id="registerEmail" placeholder="Email"><br><br>
-    <input type="password" id="registerPassword" placeholder="Password"><br><br>
-    <button onclick="createAccount()">Register</button>
-    <br><br>
-    <span style="font-size:14px;color:#ccc;">Already have an account? 
-      <a href="#" style="color:gold;" onclick="showLogin()">Login</a>
-    </span>
-    <br>
-    <button onclick="exitCreateAccount()" style="background:#444;color:white;">⬅ Back / Exit</button>
-  </div>
-</div>
-<!-- Measurement Modal -->
-<div class="modal" id="orderModal">
-  <div class="modal-content">
-    <h3>Enter Measurements & Delivery Details</h3>
-
-    <input type="text" id="name" placeholder="Full Name"><br><br>
-    <input type="text" id="phone" placeholder="Phone Number"><br><br>
-
-   
-    <hr style="border:1px solid gold; margin:15px 0;">
-
-    <input type="text" id="address" placeholder="Delivery Address"><br><br>
-    <input type="text" id="city" placeholder="City"><br><br>
-    <input type="text" id="state" placeholder="State"><br><br>
-
-    <!-- Customer Care Note -->
-    <div style="margin-top:15px; font-size:13px; color:#ccc; line-height:1.5;">
-      ⚠️ <span style="color:gold;">Important:</span><br>
-      After completing your order, please send your 
-      <strong>full measurements (Shoulder, Sleeve, Length, Trouser Length, etc.)</strong> 
-      to our customer care for perfect fitting.
-      <br><br>
-      <!-- <a href="https://wa.me/2349152004538" target="_blank" 
-         style="color:#25D366; font-weight:bold; text-decoration:none;">
-         💬 Message Customer Care
-      </a> -->
-    </div>
-
-    <br>
-    <button onclick="payNow()">Proceed To Payment</button>
-    <br><br>
-    <button onclick="goBack()" style="background:#444;color:white;">⬅ Back To Cart</button>
-  </div>
-</div>
-
-<!-- <a href="https://wa.me/2349152004538" class="whatsapp-chat" target="_blank">
-💬 Live Chat
-</a> -->
-
-<!-- <script>
-let selectedProduct = "";
-let selectedPrice = 0;
-
-const products = [
-{ name:"Royal Navy Senator", price:120000, img:"https://images.unsplash.com/photo-1583744946564-b52ac1c389c8" },
-{ name:"Classic White Senator", price:110000, img:"https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf" },
-{ name:"Luxury Gold Kaftan", price:150000, img:"https://images.unsplash.com/photo-1612423284934-2850a2f7a87d" },
-{ name:"Black Executive Agbada", price:180000, img:"https://images.unsplash.com/photo-1612423284701-b8b1d20c5c02" },
-{ name:"Emerald Prestige Senator", price:135000, img:"https://images.unsplash.com/photo-1622295022486-56f7cc8ef3f7" },
-{ name:"Royal Burgundy Kaftan", price:145000, img:"https://images.unsplash.com/photo-1588117260148-b47818741c74" }
-];
-
-const gallery = document.getElementById("gallery");
-
-products.forEach(p=>{
-gallery.innerHTML += `
-<div class="card">
-<img src="${p.img}">
-<div class="card-content">
-<h3>${p.name}</h3>
-<div class="price">₦${p.price.toLocaleString()}</div>
-<button onclick="openModal('${p.name}',${p.price})">Order Now</button>
-</div>
-</div>`;
-});
-
-function openModal(name, price){
-selectedProduct = name;
-selectedPrice = price;
-document.getElementById("orderModal").style.display="flex";
-}
-
-function payNow(){
-let handler = PaystackPop.setup({
-key: "pk_live_e8b893fa426ea57e8090d77b75bc4430cd88c4b9",
-email: "customer@email.com",
-amount: selectedPrice * 100,
-currency: "NGN",
-callback: function(response){
-
-let name = document.getElementById("name").value;
-let chest = document.getElementById("chest").value;
-let waist = document.getElementById("waist").value;
-
-let message = `Hello AB&N WEARS,
-Order: ${selectedProduct}
-Amount Paid: ₦${selectedPrice}
-Name: ${name}
-Chest: ${chest}
-Waist: ${waist}`;
-
-window.location.href =
-`https://wa.me/+2349152004538?text=${encodeURIComponent(message)}`;
-
-}
-});
-handler.openIframe();
-}
-
-/* Review Slider */
-let slides=document.querySelectorAll(".review-slide");
-let index=0;
-function showSlide(){
-slides.forEach(s=>s.style.display="none");
-slides[index].style.display="block";
-index=(index+1)%slides.length;
-}
-setInterval(showSlide,3000);
-showSlide();
-</script> -->
 <script>
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-/* ===== PRODUCTS ===== */
-let products = [
-  {
-    id: 1,
-    name: "Royal Navy Senator",
-    price: 50000,
-    images: [
-      "https://images.unsplash.com/photo-1520975958225-5f6b3c7d7a6a",
-      "https://images.unsplash.com/photo-1520975682031-a5a2a4d4b8c7",
-      "https://images.unsplash.com/photo-1503342394128-c104d54dba01"
-    ],
-    desc: "Premium navy senator outfit for classy occasions"
-  },
-  {
-    id: 2,
-    name: "Classic White Senator",
-    price: 60000,
-    images: [
-      "https://images.unsplash.com/photo-1520975922284-7a1a5f5d9c6b",
-      "https://images.unsplash.com/photo-1506629905607-d6f3d6d2d1a3",
-      "https://images.unsplash.com/photo-1520975693411-bb4c9b1c0f1c"
-    ],
-    desc: "Clean luxury white senator wear"
-  },
-  {
-    id: 3,
-    name: "Black Executive Agbada",
-    price: 80000,
-    images: [
-      "https://images.unsplash.com/photo-1600180758890-6b6b7c2b9c3a",
-      "https://images.unsplash.com/photo-1520975943330-2c3f9a8b6e7d",
-      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c"
-    ],
-    desc: "Bold executive agbada for kings"
-  },
-  {
-    id: 4,
-    name: "Gold Royal Kaftan",
-    price: 75000,
-    images: [
-      "https://images.unsplash.com/photo-1520975931025-8a2c4b5d7e9f",
-      "https://images.unsplash.com/photo-1503342452485-86b7c2c8d1a9",
-      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c"
-    ],
-    desc: "Luxury gold kaftan with royal finish"
-  },
-  {
-    id: 5,
-    name: "Emerald Prestige Senator",
-    price: 70000,
-    images: [
-      "https://images.unsplash.com/photo-1520975902211-7c8d9e1f2a3b",
-      "https://images.unsplash.com/photo-1506629905607-d6f3d6d2d1a3",
-      "https://images.unsplash.com/photo-1520975958225-5f6b3c7d7a6a"
-    ],
-    desc: "Elegant emerald green senator wear"
-  },
-  {
-    id: 6,
-    name: "Royal Burgundy Kaftan",
-    price: 85000,
-    images: [
-      "https://images.unsplash.com/photo-1520975916090-3105956dac38",
-      "https://images.unsplash.com/photo-1503342394128-c104d54dba01",
-      "https://images.unsplash.com/photo-1520975682031-a5a2a4d4b8c7"
-    ],
-    desc: "Luxury burgundy kaftan for premium events"
-  }
-];
+const productList = document.getElementById("productList");
 
-/* ===== RENDER PRODUCTS ===== */
-const gallery = document.getElementById("gallery");
-
+/* RENDER PRODUCTS */
 function renderProducts(){
-  gallery.innerHTML = "";
+  productList.innerHTML = "";
 
-  products.forEach((p)=>{
-    gallery.innerHTML += `
+  if(products.length === 0){
+    productList.innerHTML = "<p style='color:white'>No products yet</p>";
+    return;
+  }
+
+  products.forEach((p,i)=>{
+    productList.innerHTML += `
       <div class="card">
-        <img src="${p.images[0]}">
-
-        <div class="card-content">
-          <h3>${p.name}</h3>
-          <div class="price">₦${p.price.toLocaleString()}</div>
-          <p>${p.desc}</p>
-
-          <button onclick="addToCart(${p.id})">Add To Cart</button>
-          <button onclick="openProductPage(${p.id})">View Details</button>
-        </div>
+        <img src="${p.image}">
+        <h4>${p.name}</h4>
+        <div class="price">₦${p.price}</div>
+        <button onclick="addToCart(${i})">Add To Cart</button>
       </div>
     `;
   });
@@ -594,101 +283,113 @@ function renderProducts(){
 
 renderProducts();
 
-/* ===== ADD TO CART ===== */
-function addToCart(id){
-  let product = products.find(p => p.id === id);
-  if(!product) return;
+/* ADD TO CART */
+function addToCart(i){
+  let p = products[i];
 
-  let existing = cart.find(item => item.id === id);
+  let exist = cart.find(x => x.name === p.name);
 
-  if(existing){
-    existing.qty += 1;
+  if(exist){
+    exist.qty++;
   } else {
-    cart.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      images: product.images,
-      qty: 1
-    });
+    cart.push({...p, qty:1});
   }
 
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCart();
+  saveCart();
   openCart();
 }
 
-/* ===== UPDATE CART UI ===== */
+/* SAVE */
+function saveCart(){
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCart();
+}
+
+/* UPDATE CART */
 function updateCart(){
   let cartItems = document.getElementById("cartItems");
-  let cartTotal = document.getElementById("cartTotal");
-  let cartCount = document.getElementById("cartCount");
-
-  cartItems.innerHTML = "";
-
   let total = 0;
   let count = 0;
 
-  cart.forEach((item, i)=>{
+  cartItems.innerHTML = "";
+
+  cart.forEach((item,i)=>{
     total += item.price * item.qty;
     count += item.qty;
 
     cartItems.innerHTML += `
-      <div style="border-bottom:1px solid gold;padding:10px 0;">
-        <strong>${item.name}</strong><br>
-        ₦${item.price.toLocaleString()} x ${item.qty}<br>
-
-        <button onclick="changeQty(${i},-1)">-</button>
+      <div>
+        ${item.name}<br>
+        ₦${item.price} x ${item.qty}<br>
         <button onclick="changeQty(${i},1)">+</button>
+        <button onclick="changeQty(${i},-1)">-</button>
         <button onclick="removeItem(${i})">Remove</button>
+        <hr>
       </div>
     `;
   });
 
-  cartTotal.innerText = total.toLocaleString();
-  cartCount.innerText = count;
-
-  localStorage.setItem("cart", JSON.stringify(cart));
+  document.getElementById("total").innerText = total;
+  document.getElementById("count").innerText = count;
 }
 
-/* ===== CART ACTIONS ===== */
-function changeQty(index, change){
-  cart[index].qty += change;
-
-  if(cart[index].qty <= 0){
-    cart.splice(index, 1);
-  }
-
-  updateCart();
+/* CART ACTIONS */
+function changeQty(i,c){
+  cart[i].qty += c;
+  if(cart[i].qty <= 0) cart.splice(i,1);
+  saveCart();
 }
 
-function removeItem(index){
-  cart.splice(index, 1);
-  updateCart();
+function removeItem(i){
+  cart.splice(i,1);
+  saveCart();
 }
 
-/* ===== CART UI ===== */
+/* CART OPEN */
+document.getElementById("cartIcon").onclick = openCart;
+
 function openCart(){
-  document.getElementById("cartSidebar").style.right = "0";
+  document.getElementById("cart").style.right = "0";
 }
 
 function closeCart(){
-  document.getElementById("cartSidebar").style.right = "-400px";
+  document.getElementById("cart").style.right = "-100%";
 }
 
-document.getElementById("cartIcon").onclick = openCart;
+/* CHECKOUT */
+function checkout(){
+  let name = prompt("Name");
+  let phone = prompt("Phone");
 
-/* ===== PRODUCT PAGE REDIRECT ===== */
-function openProductPage(id){
-  let product = products.find(p => p.id === id);
+  let total = cart.reduce((a,b)=>a + b.price*b.qty,0);
 
-  localStorage.setItem("selectedProduct", JSON.stringify(product));
-  window.location.href = "product.html";
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+  orders.push({name, phone, total, cart});
+
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  alert("Order placed!");
+
+  cart = [];
+  saveCart();
+  closeCart();
 }
 
-/* ===== INIT CART ON LOAD ===== */
+/* INIT */
 updateCart();
+
+/* REVIEWS */
+let slides = document.querySelectorAll(".review-slide");
+let index = 0;
+
+setInterval(()=>{
+  slides.forEach(s=>s.classList.remove("active"));
+  slides[index].classList.add("active");
+  index = (index+1)%slides.length;
+},3000);
+
 </script>
-</div>
+
 </body>
 </html>
