@@ -496,434 +496,198 @@ setInterval(showSlide,3000);
 showSlide();
 </script> -->
 <script>
-let cart = [];
-let selectedPrice = 0;
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-/* PRODUCTS */
-const products = [
-// { name:"Royal Navy Senator",
-//  price:5,
-//   img:"image.img/senator1.jpeg" },
-
-{
-  name:"Royal Navy Senator",
-  price:50000,
-  images:[
-    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
-    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
-    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
-  ]
-},
-  
-// { name:"Classic White Senator", price:110000, img:"image.img/senator2.jpeg" },
-{
-  name:"Royal Navy Senator",
-  price:50000,
-  images:[
-    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
-    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
-    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
-  ]
-},
-// { name:"Luxury Gold Kaftan", price:150000, img:"image.img/senator3.jpeg" },
-{
-  name:"Royal Navy Senator",
-  price:50000,
-  images:[
-    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
-    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
-    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
-  ]
-},
-// { name:"Black Executive Agbada", price:180000, img:"https://images.unsplash.com/photo-1612423284701-b8b1d20c5c02" },
-{
-  name:"Royal Navy Senator",
-  price:50000,
-  images:[
-    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
-    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
-    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
-  ]
-},
-// { name:"Emerald Prestige Senator", price:135000, img:"https://images.unsplash.com/photo-1622295022486-56f7cc8ef3f7" },
-{
-  name:"Royal Navy Senator",
-  price:50000,
-  images:[
-    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
-    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
-    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
-  ]
-},
-// { name:"Royal Burgundy Kaftan", price:145000, img:"https://images.unsplash.com/photo-1588117260148-b47818741c74" }
-{
-  name:"Royal Navy Senator",
-  price:50000,
-  images:[
-    "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8",
-    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf",
-    "https://images.unsplash.com/photo-1612423284934-2850a2f7a87d"
-  ]
-},
+/* ===== PRODUCTS ===== */
+let products = [
+  {
+    id: 1,
+    name: "Royal Navy Senator",
+    price: 50000,
+    images: [
+      "https://images.unsplash.com/photo-1520975958225-5f6b3c7d7a6a",
+      "https://images.unsplash.com/photo-1520975682031-a5a2a4d4b8c7",
+      "https://images.unsplash.com/photo-1503342394128-c104d54dba01"
+    ],
+    desc: "Premium navy senator outfit for classy occasions"
+  },
+  {
+    id: 2,
+    name: "Classic White Senator",
+    price: 60000,
+    images: [
+      "https://images.unsplash.com/photo-1520975922284-7a1a5f5d9c6b",
+      "https://images.unsplash.com/photo-1506629905607-d6f3d6d2d1a3",
+      "https://images.unsplash.com/photo-1520975693411-bb4c9b1c0f1c"
+    ],
+    desc: "Clean luxury white senator wear"
+  },
+  {
+    id: 3,
+    name: "Black Executive Agbada",
+    price: 80000,
+    images: [
+      "https://images.unsplash.com/photo-1600180758890-6b6b7c2b9c3a",
+      "https://images.unsplash.com/photo-1520975943330-2c3f9a8b6e7d",
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c"
+    ],
+    desc: "Bold executive agbada for kings"
+  },
+  {
+    id: 4,
+    name: "Gold Royal Kaftan",
+    price: 75000,
+    images: [
+      "https://images.unsplash.com/photo-1520975931025-8a2c4b5d7e9f",
+      "https://images.unsplash.com/photo-1503342452485-86b7c2c8d1a9",
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c"
+    ],
+    desc: "Luxury gold kaftan with royal finish"
+  },
+  {
+    id: 5,
+    name: "Emerald Prestige Senator",
+    price: 70000,
+    images: [
+      "https://images.unsplash.com/photo-1520975902211-7c8d9e1f2a3b",
+      "https://images.unsplash.com/photo-1506629905607-d6f3d6d2d1a3",
+      "https://images.unsplash.com/photo-1520975958225-5f6b3c7d7a6a"
+    ],
+    desc: "Elegant emerald green senator wear"
+  },
+  {
+    id: 6,
+    name: "Royal Burgundy Kaftan",
+    price: 85000,
+    images: [
+      "https://images.unsplash.com/photo-1520975916090-3105956dac38",
+      "https://images.unsplash.com/photo-1503342394128-c104d54dba01",
+      "https://images.unsplash.com/photo-1520975682031-a5a2a4d4b8c7"
+    ],
+    desc: "Luxury burgundy kaftan for premium events"
+  }
 ];
 
-/* DISPLAY PRODUCTS */
+/* ===== RENDER PRODUCTS ===== */
 const gallery = document.getElementById("gallery");
 
-// products.forEach((p,index)=>{
-// gallery.innerHTML += `
-// <div class="card">
-// <img src="${p.img}">
-// <div class="card-content">
-// <h3>${p.name}</h3>
-// <div class="price">₦${p.price.toLocaleString()}</div>
-// <button onclick="addToCart(${index})">Add To Cart</button>
-// </div>
-// </div>`;
-// });
-// 
+function renderProducts(){
+  gallery.innerHTML = "";
 
-products.forEach((p,index)=>{
+  products.forEach((p)=>{
+    gallery.innerHTML += `
+      <div class="card">
+        <img src="${p.images[0]}">
 
-// ALWAYS guarantee 3 images
-let imgs = [];
+        <div class="card-content">
+          <h3>${p.name}</h3>
+          <div class="price">₦${p.price.toLocaleString()}</div>
+          <p>${p.desc}</p>
 
-if(p.images && p.images.length){
-  imgs = [...p.images];
+          <button onclick="addToCart(${p.id})">Add To Cart</button>
+          <button onclick="openProductPage(${p.id})">View Details</button>
+        </div>
+      </div>
+    `;
+  });
+}
 
-  // fill missing images if less than 3
-  while(imgs.length < 3){
-    imgs.push(imgs[0]);
+renderProducts();
+
+/* ===== ADD TO CART ===== */
+function addToCart(id){
+  let product = products.find(p => p.id === id);
+  if(!product) return;
+
+  let existing = cart.find(item => item.id === id);
+
+  if(existing){
+    existing.qty += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      images: product.images,
+      qty: 1
+    });
   }
 
-}else{
-  imgs = [p.img, p.img, p.img];
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCart();
+  openCart();
 }
 
-gallery.innerHTML += `
-<div class="card">
-
-<div class="slider" id="slider-${index}">
-  <img src="${imgs[0]}" class="slide active">
-  <img src="${imgs[1]}" class="slide">
-  <img src="${imgs[2]}" class="slide">
-
-  <button class="prev" onclick="slide(${index}, -1)">❮</button>
-  <button class="next" onclick="slide(${index}, 1)">❯</button>
-</div>
-
-<div class="card-content">
-<h3>${p.name}</h3>
-<div class="price">₦${p.price.toLocaleString()}</div>
-<button onclick="addToCart(${index})">Add To Cart</button>
-</div>
-
-</div>
-`;
-
-});
-
-/* ADD TO CART */
-function addToCart(index){
-let product = products[index];
-
-let existing = cart.find(item=>item.name===product.name);
-if(existing){
-existing.qty += 1;
-}else{
-cart.push({...product, qty:1});
-}
-
-updateCart();
-openCart();
-}
-
-/* UPDATE CART */
+/* ===== UPDATE CART UI ===== */
 function updateCart(){
-let cartItems = document.getElementById("cartItems");
-let cartTotal = document.getElementById("cartTotal");
-let cartCount = document.getElementById("cartCount");
+  let cartItems = document.getElementById("cartItems");
+  let cartTotal = document.getElementById("cartTotal");
+  let cartCount = document.getElementById("cartCount");
 
-cartItems.innerHTML = "";
-let total = 0;
-let count = 0;
+  cartItems.innerHTML = "";
 
-cart.forEach((item,i)=>{
-total += item.price * item.qty;
-count += item.qty;
+  let total = 0;
+  let count = 0;
 
-cartItems.innerHTML += `
-<div style="border-bottom:1px solid gold;padding:10px 0;">
-<strong>${item.name}</strong><br>
-₦${item.price.toLocaleString()} x ${item.qty}<br>
-<button onclick="changeQty(${i},-1)">-</button>
-<button onclick="changeQty(${i},1)">+</button>
-<button onclick="removeItem(${i})">Remove</button>
-</div>`;
-});
+  cart.forEach((item, i)=>{
+    total += item.price * item.qty;
+    count += item.qty;
 
-cartTotal.innerText = total.toLocaleString();
-cartCount.innerText = count;
+    cartItems.innerHTML += `
+      <div style="border-bottom:1px solid gold;padding:10px 0;">
+        <strong>${item.name}</strong><br>
+        ₦${item.price.toLocaleString()} x ${item.qty}<br>
+
+        <button onclick="changeQty(${i},-1)">-</button>
+        <button onclick="changeQty(${i},1)">+</button>
+        <button onclick="removeItem(${i})">Remove</button>
+      </div>
+    `;
+  });
+
+  cartTotal.innerText = total.toLocaleString();
+  cartCount.innerText = count;
+
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-/* CHANGE QTY */
-function changeQty(index,change){
-cart[index].qty += change;
-if(cart[index].qty <= 0) cart.splice(index,1);
-updateCart();
+/* ===== CART ACTIONS ===== */
+function changeQty(index, change){
+  cart[index].qty += change;
+
+  if(cart[index].qty <= 0){
+    cart.splice(index, 1);
+  }
+
+  updateCart();
 }
 
-/* REMOVE ITEM */
 function removeItem(index){
-cart.splice(index,1);
-updateCart();
+  cart.splice(index, 1);
+  updateCart();
 }
 
-/* CART OPEN/CLOSE */
-document.getElementById("cartIcon").onclick = openCart;
-
+/* ===== CART UI ===== */
 function openCart(){
-document.getElementById("cartSidebar").style.right="0";
+  document.getElementById("cartSidebar").style.right = "0";
 }
 
 function closeCart(){
-document.getElementById("cartSidebar").style.right="-400px";
+  document.getElementById("cartSidebar").style.right = "-400px";
 }
 
-function openCheckout(){
+document.getElementById("cartIcon").onclick = openCart;
 
-if(cart.length === 0){
-  alert("Cart is empty!");
-  return;
+/* ===== PRODUCT PAGE REDIRECT ===== */
+function openProductPage(id){
+  let product = products.find(p => p.id === id);
+
+  localStorage.setItem("selectedProduct", JSON.stringify(product));
+  window.location.href = "product.html";
 }
 
-
-/* Close Cart Sidebar */
-closeCart();
-
-/* Open Measurement & Delivery Modal */
-document.getElementById("orderModal").style.display = "flex";
-
-/* Optional: Smooth scroll to top */
-window.scrollTo({ top: 0, behavior: "smooth" });
-
-}
-
-/* PAYSTACK CHECKOUT */
-// function payNow(){
-
-// let name = document.getElementById("name").value;
-// let chest = document.getElementById("chest").value;
-// let waist = document.getElementById("waist").value;
-
-// let total = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
-
-// let handler = PaystackPop.setup({
-// key: "pk_live_e8b893fa426ea57e8090d77b75bc4430cd88c4b9",
-// email: "customer@email.com",
-// amount: total * 100,
-// currency: "NGN",
-// callback: function(response){
-
-// let orderSummary = cart.map(item=>
-// `${item.name} x${item.qty}`
-// ).join(", ");
-
-// let message = `Hello AB&N WEARS,
-// Order Summary: ${orderSummary}
-// Total Paid: ₦${total.toLocaleString()}
-// Name: ${name}
-// Chest: ${chest}
-// Waist: ${waist}`;
-
-// window.location.href =
-// `https://wa.me/2349152004538?text=${encodeURIComponent(message)}`;
-
-// cart = [];
-// updateCart();
-// closeCart();
-// }
-// });
-
-// handler.openIframe();
-// }
-let customerLoggedIn = false; // Track if customer is logged in
-let currentCustomer = {};      // Store customer info
-
-function openCheckout() {
-    if(cart.length === 0){ 
-        alert("Cart is empty!"); 
-        return; 
-    }
-
-    // Close the cart sidebar
-    closeCart();
-
-    // If customer is not logged in, show login modal
-    if(!customerLoggedIn){
-        document.getElementById("loginModal").style.display = "flex";
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-        // If logged in, open measurements & delivery modal
-        document.getElementById("orderModal").style.display = "flex";
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-}
-
-function loginCustomer(){
-    let email = document.getElementById("loginEmail").value;
-    let password = document.getElementById("loginPassword").value;
-
-    if(!email || !password){
-        alert("Please enter email and password");
-        return;
-    }
-
-    // For demo: any email/password logs in
-    customerLoggedIn = true;
-    currentCustomer = { email };
-    document.getElementById("loginModal").style.display = "none";
-
-    // Open measurements after login
-    closeCart();
-    document.getElementById("orderModal").style.display = "flex";
-    window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function showCreateAccount(){
-    document.getElementById("loginModal").style.display = "none";
-    document.getElementById("createAccountModal").style.display = "flex";
-}
-
-function showLogin(){
-    document.getElementById("createAccountModal").style.display = "none";
-    document.getElementById("loginModal").style.display = "flex";
-}
-
-function createAccount(){
-    let name = document.getElementById("registerName").value;
-    let email = document.getElementById("registerEmail").value;
-    let password = document.getElementById("registerPassword").value;
-
-    if(!name || !email || !password){
-        alert("Please fill all fields");
-        return;
-    }
-
-    // For demo: any registration is accepted
-    customerLoggedIn = true;
-    currentCustomer = { name, email };
-    document.getElementById("createAccountModal").style.display = "none";
-
-    // Open measurements after account creation
-    closeCart();
-    document.getElementById("orderModal").style.display = "flex";
-    window.scrollTo({ top: 0, behavior: "smooth" });
-}
-function payNow(){
-
-let name = document.getElementById("name").value;
-let phone = document.getElementById("phone").value;
-let address = document.getElementById("address").value;
-let city = document.getElementById("city").value;
-let state = document.getElementById("state").value;
-
-if(!name || !phone || !address || !city || !state){
-  alert("Please complete all required fields.");
-  return;
-}
-
-let total = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
-
-let handler = PaystackPop.setup({
-key: "pk_live_e8b893fa426ea57e8090d77b75bc4430cd88c4b9",
-email: "customer@email.com",
-amount: total * 100,
-currency: "NGN",
-callback: function(response){
-
-window.location.href = "thankyou.html";
-
-cart = [];
+/* ===== INIT CART ON LOAD ===== */
 updateCart();
-closeCart();
-document.getElementById("orderModal").style.display="none";
-
-}
-});
-
-handler.openIframe();
-fetch("/api/order", {
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body: JSON.stringify({
-    name,
-    phone,
-    address,
-    city,
-    state,
-    items: cart,
-    total
-  })
-});
-}
-
-/* REVIEW SLIDER */
-let slides=document.querySelectorAll(".review-slide");
-let index=0;
-function showSlide(){
-slides.forEach(s=>s.style.display="none");
-slides[index].style.display="block";
-index=(index+1)%slides.length;
-}
-setInterval(showSlide,3000);
-showSlide();
-function goBack(){
-  document.getElementById("orderModal").style.opacity="0";
-setTimeout(()=>{
-  document.getElementById("orderModal").style.display="none";
-  document.getElementById("orderModal").style.opacity="1";
-},300);
-  openCart(); // reopen cart sidebar
-}
-
-function exitLogin() {
-    // Close the login modal
-    document.getElementById("loginModal").style.display = "none";
-
-    // Optional: reopen cart sidebar when exiting login
-    openCart();
-}
-function exitCreateAccount() {
-    // Close the Create Account modal
-    document.getElementById("createAccountModal").style.display = "none";
-
-    // Optionally: reopen the cart sidebar when exiting
-    openCart();
-}
-
-function slide(index, direction){
-  let slider = document.getElementById(`slider-${index}`);
-  let slides = slider.querySelectorAll(".slide");
-
-  let current = 0;
-
-  slides.forEach((s,i)=>{
-    if(s.classList.contains("active")){
-      current = i;
-      s.classList.remove("active");
-    }
-  });
-
-  let next = (current + direction + slides.length) % slides.length;
-  slides[next].classList.add("active");
-}
-
-setInterval(() => {
-  products.forEach((_, index) => {
-    slide(index, 1);
-  });
-}, 4000); // every 4 seconds
 </script>
 </div>
 </body>
